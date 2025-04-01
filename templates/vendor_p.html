@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Profiles | VendorHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ee9e43;
+            --secondary: #c9375e;
+            --accent: #993d8b;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --info: #560bad;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .login-btn {
+            background-color: var(--accent);
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .login-btn:hover {
+            background-color: #3a7bd5;
+        }
+
+        /* Container */
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Vendor Profile */
+        .vendor-profile {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .filter-select {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: white;
+        }
+
+        .vendor-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .vendor-table th, .vendor-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .vendor-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .vendor-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .nav-links li {
+                margin-left: 0;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-handshake"></i>
+            <span>VendorHub</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="vendor-profile.html" class="active">Vendors</a></li>
+            <li><a href="contract-management.html">Contracts</a></li>
+            <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="vendor-profile">
+            <div class="search-filter">
+                <input type="text" class="search-input" placeholder="Search vendors...">
+                <select class="filter-select">
+                    <option value="">All Categories</option>
+                    <option value="IT">IT Services</option>
+                    <option value="HR">HR Services</option>
+                    <option value="Facilities">Facilities</option>
+                    <option value="Logistics">Logistics</option>
+                </select>
+            </div>
+            <table class="vendor-table">
+                <thead>
+                    <tr>
+                        <th>Vendor Name</th>
+                        <th>Business ID</th>
+                        <th>Category</th>
+                        <th>Contact</th>
+                        <th>Contract Expiry</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tbody>
+                        {% for vendor in vendors %}
+                        <tr>
+                            <td>{{ vendor[0] }}</td>
+                            <td>{{ vendor[1] }}</td>
+                            <td>{{ vendor[2] }}</td>
+                            <td>{{ vendor[3] }}</td>
+                            <td>{{ vendor[4] }}</td>
+                            <td>
+                                <button onclick="viewVendor('{{ vendor[1] }}')">View</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script>
+        function viewVendor(businessId) {
+            window.location.href = "/view_vendor?business_id=" + businessId;
+        }
+    </script>
+    
+</body>
+</html>

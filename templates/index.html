@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index_c.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-handshake"></i>
+            <span>VendorHub</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}" class="active">Dashboard</a></li>
+            <li><a href="{{ url_for('vendor_p') }}">Vendors</a></li>
+            <li><a href="{{ url_for('contract') }}">Contracts</a></li>
+            <li><a href="{{ url_for('login') }}" class="login-btn">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Image Slider -->
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1470&q=80');">
+                <div class="slide-content">
+                    <h1>Streamline Your Vendor Relationships</h1>
+                    <p>Efficiently manage all your vendors in one centralized platform with powerful tools for collaboration and tracking.</p>
+                    <a href="{{ url_for('vendor') }}" class="slide-btn">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 class="section-title">Vendor Management Solutions</h2>
+        <p class="section-subtitle">Comprehensive tools to manage your entire vendor lifecycle from onboarding to contract renewal</p>
+       
+        <div class="features-grid">
+            <a href="{{ url_for('vendor') }}" class="feature-card">
+                <div class="feature-img" style="background-image: url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1470&q=80');"></div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Vendor Management</h3>
+                    <p class="feature-desc">Add, remove, and manage all your vendors in one centralized platform with detailed records.</p>
+                </div>
+            </a>
+           
+            <a href="{{ url_for('vendor_p') }}" class="feature-card">
+                <div class="feature-img" style="background-image: url('https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1471&q=80');"></div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Vendor Profiles</h3>
+                    <p class="feature-desc">Comprehensive vendor profiles with all necessary details, documents, and communication history.</p>
+                </div>
+            </a>
+           
+            <a href="{{ url_for('contract') }}" class="feature-card">
+                <div class="feature-img" style="background-image: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1470&q=80');"></div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Contract Management</h3>
+                    <p class="feature-desc">Track contract terms, expiration dates, and receive automated renewal alerts.</p>
+                </div>
+            </a>
+           
+            <div class="feature-card">
+                <div class="feature-img" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1415&q=80');"></div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Basic Analytics</h3>
+                    <p class="feature-desc">Visual dashboards and reports to analyze vendor performance and spending.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

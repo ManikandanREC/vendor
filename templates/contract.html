@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Management | VendorHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-handshake"></i>
+            <span>VendorHub</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="vendor-profile.html">Vendors</a></li>
+            <li><a href="contract-management.html" class="active">Contracts</a></li>
+            <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        {% for contract in contracts %}
+        <div class="contract-card {{ contract.status_class }}">
+            <div class="contract-header">
+                <h3 class="contract-title">{{ contract.contract_type }}</h3>
+                <span class="contract-status {{ contract.status_class }}">
+                    {{ contract.status_text }}
+                </span>
+            </div>
+            <div class="contract-details">
+                <div class="contract-detail">
+                    <div class="detail-label">Vendor</div>
+                    <div class="detail-value">{{ contract.vendor_name }}</div>
+                </div>
+                <div class="contract-detail">
+                    <div class="detail-label">Start Date</div>
+                    <div class="detail-value">{{ contract.start_date }}</div>
+                </div>
+                <div class="contract-detail">
+                    <div class="detail-label">End Date</div>
+                    <div class="detail-value">{{ contract.end_date }}</div>
+                </div>
+                <div class="contract-detail">
+                    <div class="detail-label">Value</div>
+                    <div class="detail-value">${{ contract.contract_value }}</div>
+                </div>
+            </div>
+            <div class="contract-actions">
+                <button class="action-btn edit-btn">Modify</button>
+                <button class="action-btn">View Details</button>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
