@@ -201,10 +201,10 @@
             <span>VendorHub</span>
         </div>
         <ul class="nav-links">
-            <li><a href="index.html">Dashboard</a></li>
-            <li><a href="vendor-profile.html">Vendors</a></li>
-            <li><a href="contract-management.html">Contracts</a></li>
-            <li><a href="login.html" class="login-btn">Login</a></li>
+            <li><a href="{{ url_for('index') }}" >Dashboard</a></li>
+            <li><a href="{{ url_for('vendor_p') }}">Vendors</a></li>
+            <li><a href="{{ url_for('contract') }}">Contracts</a></li>
+            <li><a href="{{ url_for('login') }}" class="login-btn">Login</a></li>
         </ul>
     </nav>
 
@@ -261,9 +261,9 @@
                         <label for="contract-vendor">Select Vendor</label>
                         <select id="contract-vendor" name="contract-vendor" class="form-control" required>
                             <option value="">Select vendor</option>
-                            <option value="1">ABC Suppliers</option>
-                            <option value="2">XYZ Services</option>
-                            <option value="3">Global Tech</option>
+                            {% for vendor in vendors %}
+                                <option value="{{ vendor[0] }}">{{ vendor[1] }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="form-group">

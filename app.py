@@ -18,7 +18,10 @@ def index():
 
 @app.route('/vendor')
 def vendor():
-    return render_template('vendor.html')
+    # Fetch vendors for the contract dropdown
+    cursor.execute("SELECT id, name FROM vendors")
+    vendors = cursor.fetchall()
+    return render_template('vendor.html', vendors=vendors)
 
 @app.route("/add_vendor", methods=["POST"])
 def add_vendor():
@@ -30,29 +33,65 @@ def add_vendor():
     category = request.form["category"]
     expiry_date = request.form["expiry-date"]
 
-    query = "INSERT INTO vendors (name, business_id, phone, email, address, category,  contract_expiry) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO vendors (name, business_id, phone, email, address, category, contract_expiry) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     cursor.execute(query, (name, business_id, phone, email, address, category, expiry_date))
     db.commit()
     return redirect("/")
 
 @app.route('/vendor_p')
 def vendor_p():
-    cursor.execute("SELECT name, business_id, category, phone, contract_expiry FROM vendors")
+    cursor.execute("SELECT name, business_id, category, phone, contract_expiry, address, email FROM vendors")
     vendors = cursor.fetchall()
     return render_template('vendor_p.html', vendors=vendors)
 
 
+@app.route('/delete_vendor')
+def delete_vendor():
+    business_id = request.args.get('business_id')
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM vendors WHERE business_id = %s", (business_id,))
+    db.commit()
+    return '', 204
+
+@app.route("/update_vendor", methods=["POST"])
+def update_vendor():
+    data = request.get_json()
+    # Extract fields from `data` and update in MySQL
+    query = """
+        UPDATE vendors SET 
+            name=%s, category=%s, contact=%s, expiry=%s, address=%s, email=%s
+        WHERE business_id=%s
+    """
+    values = (
+        data["name"],
+        data["category"],
+        data["contact"],
+        data["expiry"],
+        data["address"],
+        data["email"],
+        data["id"]
+    )
+    cursor.execute(query, values)
+    db.commit()
+    return jsonify({"message": "Vendor updated"})
+
+
+
 @app.route('/contract')
 def contract():
-    cursor.execute("SELECT id, business_id FROM vendors")  # Fetch vendor id and business_id
+    # Fetch vendors for the dropdown
+    cursor.execute("SELECT id, name FROM vendors")
     vendors = cursor.fetchall()
-    return render_template('contract.html', vendors=vendors)
-
-
+    
+    # Fetch contracts
+    cursor.execute("SELECT * FROM contracts")
+    contracts = cursor.fetchall()
+    
+    return render_template('contract.html', vendors=vendors, contracts=contracts)
 
 @app.route('/add_contract', methods=['POST'])
 def add_contract():
-    vendor_id = request.form["contract-vendor"]  # Ensure vendor_id is from vendors.id
+    vendor_id = request.form["contract-vendor"]
     contract_type = request.form["contract-type"]
     start_date = request.form["start-date"]
     end_date = request.form["end-date"]
@@ -64,42 +103,6 @@ def add_contract():
     db.commit()
     
     return redirect("/contract")
-
-@app.route('/contract-management')
-def contract_management():
-    cursor.execute("SELECT c.id, v.business_id, c.contract_type, c.start_date, c.end_date, c.contract_value FROM contracts c JOIN vendors v ON c.vendor_id = v.id")
-    contracts = cursor.fetchall()
-
-    today = datetime.today().date()
-    contract_list = []
-    
-    for contract in contracts:
-        contract_id, vendor_name, contract_type, start_date, end_date, contract_value = contract
-        end_date = datetime.strptime(str(end_date), "%Y-%m-%d").date()
-        
-        if end_date < today:
-            status_class = "expired"
-            status_text = "Expired"
-        elif end_date < today + timedelta(days=30):
-            status_class = "expiring"
-            status_text = "Expiring Soon"
-        else:
-            status_class = "active"
-            status_text = "Active"
-        
-        contract_list.append({
-            "contract_id": contract_id,
-            "vendor_name": vendor_name,
-            "contract_type": contract_type,
-            "start_date": start_date,
-            "end_date": end_date,
-            "contract_value": contract_value,
-            "status_class": f"status-{status_class}",
-            "status_text": status_text
-        })
-
-    return render_template("contract-management.html", contracts=contract_list)
-
 
 @app.route('/login')
 def login():
