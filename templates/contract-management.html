@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VendorHub - Contract Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-handshake"></i>
+            <span>VendorHub</span>
+        </div>
+           <ul class="nav-links">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('vendors') }}">Vendor Management</a></li>
+    <li><a href="{{ url_for('vProfile') }}">Vendor Profiles</a></li>
+    <li><a href="{{ url_for('contracts') }}">Contracts</a></li>
+    <li><a href="{{ url_for('analytics') }}">Analytics</a></li>
+    <li><a href="{{ url_for('login') }}" id="login-btn" class="login-btn">Login</a></li>
+</ul>
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero" style="background-image: linear-gradient(135deg, rgba(76, 201, 240, 0.9), rgba(86, 11, 173, 0.9)), url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');">
+        <div class="hero-content">
+            <h1>Contract Management</h1>
+            <p>Track all your vendor contracts in one place with automated alerts and renewals</p>
+        </div>
+    </section>
+
+    <!-- Contract Management Content -->
+    <section class="page-content">
+        <div class="container">
+            <div class="contract-management">
+                <div class="contract-filters">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active">All Contracts</button>
+                        <button class="filter-tab">Active</button>
+                        <button class="filter-tab">Expiring</button>
+                        <button class="filter-tab">Expired</button>
+                    </div>
+                    <div class="search-add">
+                        <input type="text" class="search-input" placeholder="Search contracts...">
+                        <button class="action-btn primary-btn" id="open-contract-modal"><i class="fas fa-plus"></i> New Contract</button>
+
+                    </div>
+                </div>
+                
+            <div class="contract-list">
+    {% for contract in contracts %}
+    <div class="contract-card 
+        {% if contract[3] < current_date %}expired
+        {% elif contract[3] <= near_expiry_date %}expiring
+        {% else %}active{% endif %}">
+        
+        <div class="contract-header">
+            <h3 class="contract-title">{{ contract[0] }}</h3>
+            <span class="contract-status 
+                {% if contract[3] < current_date %}status-expired
+                {% elif contract[3] <= near_expiry_date %}status-expiring
+                {% else %}status-active{% endif %}">
+                {% if contract[3] < current_date %}Expired
+                {% elif contract[3] <= near_expiry_date %}Expiring Soon
+                {% else %}Active{% endif %}
+            </span>
+        </div>
+        <div class="contract-details">
+            <div class="contract-detail">
+                <div class="detail-label">Vendor</div>
+                <div class="detail-value">{{ contract[1] }}</div>
+            </div>
+            <div class="contract-detail">
+                <div class="detail-label">Start Date</div>
+                <div class="detail-value">{{ contract[2] }}</div>
+            </div>
+            <div class="contract-detail">
+                <div class="detail-label">End Date</div>
+                <div class="detail-value">{{ contract[3] }}</div>
+            </div>
+            <div class="contract-detail">
+                <div class="detail-label">Value</div>
+                <div class="detail-value">${{ '{:,.2f}'.format(contract[4]) }}</div>
+            </div>
+        </div>
+        <div class="contract-actions">
+            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Modify</button>
+            <button class="action-btn view-btn"><i class="fas fa-eye"></i> View</button>
+            <button class="action-btn download-btn"><i class="fas fa-download"></i> Download</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="contact-info">
+                <h2>Contract Support</h2>
+                <p>Need help with contract management? Our legal team is here to assist.</p>
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>123 Business Ave, Suite 500, San Francisco, CA 94107</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+1 (555) 123-4567</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>contracts@vendorhub.com</span>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="contact-form">
+                <h2>Contract Assistance Request</h2>
+                <form>
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control">
+                            <option value="">Select Contract Issue</option>
+                            <option value="create">Creating a Contract</option>
+                            <option value="renewal">Contract Renewal</option>
+                            <option value="review">Contract Review</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Describe your issue" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Request Support</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About VendorHub</h3>
+                <p>VendorHub is a comprehensive vendor management system designed to streamline your vendor relationships and contract management processes.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="vendor-management.html">Vendor Management</a></li>
+                    <li><a href="vendor-profiles.html">Vendor Profiles</a></li>
+                    <li><a href="contract-management.html">Contract Management</a></li>
+                    <li><a href="analytics.html">Analytics</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your Email">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 VendorHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Login to VendorHub</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="login-form">
+                    <h3 class="form-title">Welcome Back!</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" class="form-control" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" class="form-control" placeholder="Enter your password">
+                        </div>
+                        <button type="submit" class="submit-btn">Login</button>
+                        <div class="form-footer">
+                            Don't have an account? <a href="#" id="show-signup">Sign up</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Account</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="login-form">
+                    <h3 class="form-title">Get Started with VendorHub</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" id="signup-name" class="form-control" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email</label>
+                            <input type="email" id="signup-email" class="form-control" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" class="form-control" placeholder="Create a password">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-confirm">Confirm Password</label>
+                            <input type="password" id="signup-confirm" class="form-control" placeholder="Confirm your password">
+                        </div>
+                        <button type="submit" class="submit-btn">Sign Up</button>
+                        <div class="form-footer">
+                            Already have an account? <a href="#" id="show-login">Login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Contract Modal -->
+<div class="modal" id="addContractModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Contract</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/add_contract" method="POST">
+                    <!-- Contract Title -->
+                    <div class="form-group">
+                        <label for="contract-title">Contract Title</label>
+                        <input type="text" id="contract-title" name="contract-title" class="form-control" required>
+                    </div>
+                    <!-- Other form fields here -->
+                    <button type="submit" class="btn btn-primary">Save Contract</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addContractModal">
+    Add Contract
+</button>
+
+
+
+    <div class="form-group">
+        <label for="contract-type">Contract Type</label>
+        <select id="contract-type" name="contract-type" class="form-control" required>
+            <option value="">Select type</option>
+            <option value="Service">Service Agreement</option>
+            <option value="Purchase">Purchase Order</option>
+            <option value="Master">Master Agreement</option>
+            <option value="NDA">Non-Disclosure Agreement</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="start-date">Start Date</label>
+        <input type="date" id="start-date" name="start-date" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="end-date">End Date</label>
+        <input type="date" id="end-date" name="end-date" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="contract-value">Contract Value</label>
+        <input type="number" id="contract-value" name="contract-value" class="form-control" placeholder="Enter amount" required>
+    </div>
+
+    <div class="form-group">
+        <label for="contract-terms">Terms & Conditions</label>
+        <textarea id="contract-terms" name="contract-terms" class="form-control" rows="4" placeholder="Enter terms and conditions" required></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn">Save Contract</button>
+</form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const openContractBtn = document.getElementById("open-contract-modal");
+    const contractModal = document.getElementById("contract-modal");
+    const closeContractBtn = document.getElementById("close-contract-modal");
+
+    openContractBtn.onclick = () => {
+        contractModal.style.display = "block";
+    }
+
+    closeContractBtn.onclick = () => {
+        contractModal.style.display = "none";
+    }
+
+    window.onclick = (event) => {
+        if (event.target === contractModal) {
+            contractModal.style.display = "none";
+        }
+    }
+</script>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
